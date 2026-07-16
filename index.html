@@ -1,1 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expérience Realtime</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="background-orb orb-a"></div>
+    <div class="background-orb orb-b"></div>
+
+    <main class="app-shell">
+      <section class="hero-card glass">
+        <div class="hero-head">
+          <div>
+            <p class="eyebrow">Démo collaborative temps réel</p>
+            <h1>Expérience Realtime</h1>
+          </div>
+          <div class="stats-pill">
+            <span class="dot"></span>
+            <span id="online-count">0 en ligne</span>
+          </div>
+        </div>
+
+        <div class="hero-grid">
+          <aside class="panel glass panel--compact">
+            <div class="panel-title-row">
+              <h2>Votre identité</h2>
+              <button id="theme-toggle" class="ghost-button" type="button">🌙</button>
+            </div>
+
+            <label class="field">
+              <span>Pseudonyme</span>
+              <input id="username-input" type="text" placeholder="Nom d'utilisateur" maxlength="18" />
+            </label>
+
+            <label class="field">
+              <span>Couleur du curseur</span>
+              <input id="color-input" type="color" value="#7c3aed" />
+            </label>
+
+            <div class="button-row">
+              <button id="connect-btn" class="primary-button" type="button">Se connecter</button>
+              <button id="random-name-btn" class="ghost-button" type="button">Aléatoire</button>
+            </div>
+
+            <div class="status-line">
+              <span id="status-pill" class="status-pill">Pas connecté</span>
+              <span id="connection-text">En attente de Supabase</span>
+            </div>
+
+            <div class="reaction-chooser">
+              <span>Réactions</span>
+              <div class="emoji-grid">
+                <button type="button" data-emoji="👍">👍</button>
+                <button type="button" data-emoji="😂">😂</button>
+                <button type="button" data-emoji="❤️">❤️</button>
+                <button type="button" data-emoji="🎉">🎉</button>
+              </div>
+            </div>
+          </aside>
+
+          <section class="panel glass panel--large">
+            <div class="panel-title-row">
+              <h2>Surface collaborative</h2>
+              <span class="micro-copy">Mouvements + réactions + chat en direct</span>
+            </div>
+
+            <div class="surface-caption">
+              <p>
+                Déplacez votre souris sur la zone pour partager votre curseur en temps réel avec les autres sessions.
+              </p>
+            </div>
+
+            <div class="showcase-area" id="surface-area">
+              <div id="cursor-layer" aria-hidden="true"></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="chat-card glass">
+        <div class="panel-title-row">
+          <h2>Chat temps réel</h2>
+          <span id="chat-indicator" class="micro-copy">En attente</span>
+        </div>
+
+        <div id="chat-feed" class="chat-feed" aria-live="polite"></div>
+
+        <form id="chat-form" class="chat-form">
+          <input
+            id="chat-input"
+            type="text"
+            maxlength="160"
+            placeholder="Écrivez un message…"
+            autocomplete="off"
+          />
+          <button class="primary-button" type="submit">Envoyer</button>
+        </form>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
 
