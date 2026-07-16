@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.55.0";
 
 const SUPABASE_URL = "https://jffxwtrixzqacllfndxb.supabase.co";
-const SUPABASE_ANON_KEY = "";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmZnh3dHJpeHpxYWNsbGZuZHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMDg4OTksImV4cCI6MjA5OTc4NDg5OX0.7kxUfnLgjqCPa2pfSaqmH7kk6E0Vbb8zxIXPrJz8t1U";
 
 const RANDOM_NAMES = [
   "Nova",
