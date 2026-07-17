@@ -1,0 +1,130 @@
+/* ══════════════════════════════════════════════════════════
+   VARIABLES — Système de design Realtime Demo
+   Palette : bleu-nuit profond × indigo × cyan "data-stream"
+   Signature : gradient indigo→cyan sur les éléments actifs
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+
+  /* ── Arrière-plans ──────────────────────────────────── */
+  --bg-deep:    #050916;   /* fond le plus sombre (cursor-area) */
+  --bg-base:    #070d22;   /* fond de l'application */
+  --bg-panel:   rgba(7, 10, 28, 0.92); /* panneaux latéraux */
+  --bg-surface: rgba(255, 255, 255, 0.04); /* cartes, inputs */
+  --bg-surface-hover: rgba(255, 255, 255, 0.07);
+  --bg-glass:   rgba(5, 9, 22, 0.88); /* modal de login */
+
+  /* ── Bordures ───────────────────────────────────────── */
+  --border:        rgba(255, 255, 255, 0.07);
+  --border-accent: rgba(99, 102, 241, 0.4);
+
+  /* ── Couleurs d'accent ──────────────────────────────── */
+  --accent:        #6366f1;    /* indigo principal */
+  --accent-light:  #818cf8;    /* indigo clair */
+  --accent-dark:   #4338ca;    /* indigo foncé */
+  --accent-dim:    rgba(99, 102, 241, 0.18); /* fond accent */
+  --accent-glow:   rgba(99, 102, 241, 0.35);
+  --accent-2:      #22d3ee;    /* cyan secondaire */
+  --accent-2-dim:  rgba(34, 211, 238, 0.12);
+
+  /* Gradient signature indigo → cyan */
+  --grad:      linear-gradient(135deg, #6366f1 0%, #22d3ee 100%);
+  --grad-text: linear-gradient(135deg, #818cf8 0%, #67e8f9 100%);
+
+  /* ── Texte ──────────────────────────────────────────── */
+  --text:         #e8ecff;  /* texte principal (blanc avec teinte bleue) */
+  --text-muted:   #8b96c8;  /* texte secondaire */
+  --text-dim:     #3d4a7c;  /* texte très discret */
+
+  /* ── États sémantiques ──────────────────────────────── */
+  --success:  #34d399;
+  --warning:  #fbbf24;
+  --danger:   #f87171;
+  --info:     var(--accent-light);
+
+  /* ── Typographie ────────────────────────────────────── */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --text-xs:   11px;
+  --text-sm:   13px;
+  --text-base: 14px;
+  --text-md:   15px;
+  --text-lg:   17px;
+  --text-xl:   20px;
+  --text-2xl:  24px;
+  --text-3xl:  32px;
+
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semi:    600;
+  --weight-bold:    700;
+
+  --leading-tight:  1.2;
+  --leading-base:   1.5;
+  --leading-loose:  1.7;
+
+  /* ── Espacements ────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* ── Rayons de bordure ──────────────────────────────── */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius:    10px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* ── Ombres ─────────────────────────────────────────── */
+  --shadow-sm:  0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow:     0 4px 20px rgba(0, 0, 0, 0.45);
+  --shadow-lg:  0 8px 40px rgba(0, 0, 0, 0.65);
+  --shadow-accent: 0 4px 24px rgba(99, 102, 241, 0.3);
+
+  /* ── Transitions ────────────────────────────────────── */
+  --ease-out:   cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast:   150ms;
+  --duration-base:   220ms;
+  --duration-slow:   350ms;
+  --transition:   var(--duration-base) var(--ease-out);
+
+  /* ── Dimensions fixes ───────────────────────────────── */
+  --header-h:       56px;
+  --emoji-bar-h:    60px;
+  --panel-w:        276px;
+
+  /* ── Z-index (couches explicites) ───────────────────── */
+  --z-base:       0;
+  --z-canvas:     10;
+  --z-cursors:    50;   /* curseurs distants */
+  --z-my-cursor:  60;   /* curseur local */
+  --z-effects:    70;   /* ripple, etc. */
+  --z-panels:     100;  /* panneaux latéraux */
+  --z-header:     200;  /* en-tête */
+  --z-floating:   800;  /* emojis flottants */
+  --z-toast:      900;  /* notifications */
+  --z-modal:      1000; /* modal de login */
+
+  /* ── Couleurs des utilisateurs ──────────────────────── */
+  /* Utilisées par JS via getUserColor(username) */
+}
+
+/* ── Thème réduit : désactive les animations coûteuses ── */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+    --ease-spring:   linear;
+  }
+}

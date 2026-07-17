@@ -1,0 +1,225 @@
+/* ══════════════════════════════════════════════════════════
+   LOGIN — Modal de connexion
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Overlay plein-écran ────────────────────────────────── */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--bg-deep);
+  /* Fond animé : gradient tournant */
+  background-image:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 85% 80%, rgba(34, 211, 238, 0.08) 0%, transparent 60%);
+  animation: overlay-bg 8s ease-in-out infinite alternate;
+  transition: opacity var(--duration-slow) var(--ease-out),
+              visibility var(--duration-slow);
+}
+
+@keyframes overlay-bg {
+  from { background-position: 20% 10%, 85% 80%; }
+  to   { background-position: 25% 15%, 80% 75%; }
+}
+
+/* État masqué */
+.login-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ── Carte ──────────────────────────────────────────────── */
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-10) var(--space-8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  animation: card-enter 0.5s var(--ease-spring);
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Logo ───────────────────────────────────────────────── */
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.login-logo-icon {
+  font-size: 28px;
+  line-height: 1;
+  filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.6));
+}
+
+.login-logo-text {
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semi);
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+
+.login-logo-accent {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Titre ──────────────────────────────────────────────── */
+.login-title {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  color: var(--text);
+  margin-bottom: var(--space-2);
+  letter-spacing: -0.5px;
+}
+
+.login-subtitle {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-loose);
+  margin-bottom: var(--space-8);
+}
+
+/* ── Formulaire ─────────────────────────────────────────── */
+.login-label {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-2);
+}
+
+.login-input-row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.login-input {
+  flex: 1;
+  height: 44px;
+  padding: 0 var(--space-4);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.login-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+/* Bouton Rejoindre */
+.login-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--grad);
+  border-radius: var(--radius);
+  color: white;
+  transition: opacity var(--transition), transform var(--duration-fast) var(--ease-out),
+              box-shadow var(--transition);
+  box-shadow: var(--shadow-accent);
+}
+
+.login-btn:not(:disabled):hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(99, 102, 241, 0.45);
+}
+
+.login-btn:not(:disabled):active {
+  transform: translateY(0);
+}
+
+.login-btn:disabled {
+  background: var(--bg-surface);
+  box-shadow: none;
+  color: var(--text-dim);
+}
+
+/* Message d'erreur */
+.login-error {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--danger);
+}
+
+/* ── Fonctionnalités ────────────────────────────────────── */
+.login-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  margin-top: var(--space-8);
+}
+
+.login-feature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: var(--leading-tight);
+}
+
+.feature-icon {
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ── Attribution Supabase ───────────────────────────────── */
+.login-powered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  margin-top: var(--space-6);
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+}
+
+.login-powered svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.login-powered strong {
+  color: var(--text-muted);
+  font-weight: var(--weight-medium);
+}

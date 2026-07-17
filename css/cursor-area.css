@@ -1,0 +1,231 @@
+/* ══════════════════════════════════════════════════════════
+   CURSOR AREA — Zone de collaboration + curseurs
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Zone principale ────────────────────────────────────── */
+.cursor-area {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  cursor: none; /* On remplace par le curseur SVG custom */
+  background-color: var(--bg-deep);
+}
+
+/* ── Fond décoratif ─────────────────────────────────────── */
+.cursor-area-bg {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-base);
+  pointer-events: none;
+
+  /* Grid de points */
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+
+  /* Gradients d'ambiance */
+  background-color: var(--bg-deep);
+}
+
+/* Gradients d'ambiance par-dessus la grille */
+.cursor-area-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 15%, rgba(99, 102, 241, 0.09) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 80%, rgba(34, 211, 238, 0.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* Vignette pour assombrir les bords */
+.cursor-area-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 60%, rgba(5, 9, 22, 0.6) 100%);
+  pointer-events: none;
+}
+
+/* ── Indice contextuel (visible quand seul) ─────────────── */
+.cursor-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  user-select: none;
+  pointer-events: none;
+  z-index: var(--z-canvas);
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.cursor-hint.hidden {
+  opacity: 0;
+}
+
+.cursor-hint-icon {
+  font-size: 40px;
+  margin-bottom: var(--space-3);
+  opacity: 0.3;
+  animation: hint-float 3s ease-in-out infinite;
+}
+
+@keyframes hint-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+.cursor-hint-title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+  color: var(--text-dim);
+  margin-bottom: var(--space-2);
+}
+
+.cursor-hint-sub {
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  max-width: 280px;
+  line-height: var(--leading-loose);
+  opacity: 0.6;
+}
+
+/* ── Curseur de l'utilisateur local ─────────────────────── */
+.my-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: var(--z-my-cursor);
+  opacity: 0;
+  transition: opacity 0.15s var(--ease-out);
+  will-change: transform;
+}
+
+.my-cursor.visible {
+  opacity: 1;
+}
+
+/* La flèche SVG est colorée en JS via fill */
+
+/* ── Curseurs distants ───────────────────────────────────── */
+.remote-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: var(--z-cursors);
+  will-change: transform;
+  /* Pas de transition CSS — le lerp JS gère le lissage */
+}
+
+/* Entrée d'un curseur */
+.remote-cursor {
+  animation: cursor-enter 0.35s var(--ease-spring);
+}
+
+@keyframes cursor-enter {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* Sortie d'un curseur */
+.remote-cursor.leaving {
+  animation: cursor-leave 0.3s var(--ease-out) forwards;
+}
+
+@keyframes cursor-leave {
+  from { opacity: 1; transform: var(--cur-transform, translate(0,0)) scale(1); }
+  to   { opacity: 0; transform: var(--cur-transform, translate(0,0)) scale(0.5); }
+}
+
+/* Point central du curseur */
+.cursor-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--cursor-color);
+  border: 2.5px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 0 0 1.5px var(--cursor-color),
+    0 2px 12px rgba(0, 0, 0, 0.5),
+    0 0 16px color-mix(in srgb, var(--cursor-color) 50%, transparent);
+  transform: translate(-50%, -50%);
+}
+
+/* Étiquette du curseur */
+.cursor-label {
+  position: absolute;
+  top: 9px;
+  left: 11px;
+  padding: 3px 9px 3px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--cursor-color);
+  color: white;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: var(--weight-semi);
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: 0.25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  user-select: none;
+}
+
+/* ── Effet de clic (ripple) ──────────────────────────────── */
+.click-ripple {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--ripple-color);
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  z-index: var(--z-effects);
+  animation: ripple-expand 0.65s var(--ease-out) forwards;
+}
+
+@keyframes ripple-expand {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.8;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(4);
+    opacity: 0;
+  }
+}
+
+/* Statut de connexion (coin inférieur gauche) */
+.connection-status {
+  position: fixed;
+  bottom: calc(var(--emoji-bar-h) + var(--space-3));
+  left: var(--space-4);
+  z-index: var(--z-panels);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.03em;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  background: var(--bg-glass);
+  color: var(--text-muted);
+  user-select: none;
+  transition: all var(--transition);
+}
+
+.connection-status.status-connected    { color: var(--success); border-color: rgba(52,211,153,0.3); }
+.connection-status.status-connecting   { color: var(--warning); border-color: rgba(251,191,36,0.3); }
+.connection-status.status-disconnected { color: var(--text-muted); }
+.connection-status.status-error        { color: var(--danger); border-color: rgba(248,113,113,0.3); }

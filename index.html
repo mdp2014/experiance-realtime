@@ -1,115 +1,394 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Expérience Realtime</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="background-orb orb-a"></div>
-    <div class="background-orb orb-b"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Démonstration collaborative en temps réel propulsée par Supabase Realtime." />
+  <title>Supabase Realtime — Démo Collaborative</title>
 
-    <main class="app-shell">
-      <section class="hero-card glass">
-        <div class="hero-head">
-          <div>
-            <p class="eyebrow">Démo collaborative temps réel</p>
-            <h1>Expérience Realtime</h1>
-          </div>
-          <div class="stats-pill">
-            <span class="dot"></span>
-            <span id="online-count">0 en ligne</span>
-          </div>
+  <!-- Favicon inline SVG -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+
+  <!-- Google Fonts : Inter + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Feuilles de style (ordre : tokens → base → composants → responsive) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/cursor-area.css" />
+  <link rel="stylesheet" href="css/panels.css" />
+  <link rel="stylesheet" href="css/chat.css" />
+  <link rel="stylesheet" href="css/emoji-bar.css" />
+  <link rel="stylesheet" href="css/effects.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════
+       MODAL DE CONNEXION
+       ════════════════════════════════════════ -->
+  <div
+    id="login-overlay"
+    class="login-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="login-title"
+  >
+    <div class="login-card">
+      <!-- Logo -->
+      <div class="login-logo" aria-hidden="true">
+        <span class="login-logo-icon">⚡</span>
+        <span class="login-logo-text">
+          Realtime<span class="login-logo-accent">Demo</span>
+        </span>
+      </div>
+
+      <!-- Titres -->
+      <h1 id="login-title" class="login-title">Expérience collaborative</h1>
+      <p class="login-subtitle">
+        Déplacez votre curseur, envoyez des messages et lancez des réactions —
+        tous les participants vous voient en temps réel.
+      </p>
+
+      <!-- Formulaire -->
+      <div class="login-form" role="group" aria-labelledby="login-title">
+        <label class="login-label" for="username-input">Choisissez un pseudonyme</label>
+        <div class="login-input-row">
+          <input
+            id="username-input"
+            class="login-input"
+            type="text"
+            placeholder="Alice, Bob, Charlie…"
+            maxlength="32"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-required="true"
+          />
+          <button id="join-btn" class="login-btn" disabled aria-label="Rejoindre la session">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+        <p id="login-error" class="login-error" role="alert" hidden></p>
+      </div>
+
+      <!-- Fonctionnalités -->
+      <ul class="login-features" aria-label="Fonctionnalités disponibles">
+        <li class="login-feature">
+          <span class="feature-icon" aria-hidden="true">🖱️</span>
+          <span>Curseurs synchronisés en temps réel</span>
+        </li>
+        <li class="login-feature">
+          <span class="feature-icon" aria-hidden="true">💬</span>
+          <span>Chat instantané persistant</span>
+        </li>
+        <li class="login-feature">
+          <span class="feature-icon" aria-hidden="true">🎉</span>
+          <span>Réactions emoji partagées</span>
+        </li>
+        <li class="login-feature">
+          <span class="feature-icon" aria-hidden="true">👥</span>
+          <span>Présence des participants</span>
+        </li>
+      </ul>
+
+      <!-- Attribution -->
+      <p class="login-powered">
+        Propulsé par
+        <!-- Logo Supabase inline SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+          viewBox="0 0 109 113" fill="none" aria-label="Supabase" role="img">
+          <path d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9374L63.7076 110.284Z" fill="url(#sb-a)"/>
+          <path d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9374L63.7076 110.284Z" fill="url(#sb-b)" fill-opacity="0.2"/>
+          <path d="M45.317 2.07103C48.1765-1.53037 53.9745.442937 54.0434 5.041L54.4849 72.2922H9.83113C1.64038 72.2922-2.92775 62.8321 2.1655 56.4175L45.317 2.07103Z" fill="#3ECF8E"/>
+          <defs>
+            <linearGradient id="sb-a" x1="53.9738" y1="54.974" x2="94.1635" y2="71.8295" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#249361"/><stop offset="1" stop-color="#3ECF8E"/>
+            </linearGradient>
+            <linearGradient id="sb-b" x1="36.1558" y1="30.578" x2="54.4844" y2="65.0806" gradientUnits="userSpaceOnUse">
+              <stop/><stop offset="1" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <strong>Supabase Realtime</strong>
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════
+       APPLICATION PRINCIPALE
+       ════════════════════════════════════════ -->
+  <div id="app" class="app" hidden aria-label="Application collaborative Realtime">
+
+    <!-- En-tête -->
+    <header class="app-header" role="banner">
+      <div class="header-left">
+        <div class="header-logo" aria-label="Realtime Demo">
+          <span class="header-logo-icon" aria-hidden="true">⚡</span>
+          <span class="header-logo-text">
+            Realtime<span class="header-logo-accent">Demo</span>
+          </span>
+        </div>
+        <div id="user-count-badge" class="user-count-badge" role="status" aria-live="polite" aria-label="Utilisateurs en ligne">
+          <span class="count-pulse" aria-hidden="true"></span>
+          <span id="count-value" class="count-value">0</span>
+          <span class="count-label">en ligne</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Bascule panneau Utilisateurs -->
+        <button
+          id="btn-toggle-users"
+          class="header-btn"
+          aria-pressed="true"
+          aria-label="Afficher/masquer les utilisateurs"
+          title="Utilisateurs en ligne"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </button>
+
+        <!-- Bascule panneau Chat -->
+        <button
+          id="btn-toggle-chat"
+          class="header-btn"
+          aria-pressed="true"
+          aria-label="Afficher/masquer le chat"
+          title="Chat"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>
+          </svg>
+          <span id="chat-unread-badge" class="chat-unread-badge" hidden aria-label="Messages non lus">0</span>
+        </button>
+
+        <!-- Avatar de l'utilisateur connecté -->
+        <div
+          id="my-avatar"
+          class="my-avatar"
+          role="img"
+          aria-label="Votre identité"
+          title="Votre identité"
+        ></div>
+
+        <!-- Quitter -->
+        <button
+          id="btn-leave"
+          class="header-btn header-btn--danger"
+          aria-label="Quitter la session"
+          title="Quitter"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Corps de l'application -->
+    <div class="app-body">
+
+      <!-- ── Zone de suivi des curseurs ── -->
+      <main
+        id="cursor-area"
+        class="cursor-area"
+        role="region"
+        aria-label="Zone de collaboration — déplacez votre souris"
+      >
+        <!-- Fond décoratif (grid + gradients) -->
+        <div class="cursor-area-bg" aria-hidden="true"></div>
+
+        <!-- Indice contextuel (visible quand seul) -->
+        <div id="cursor-hint" class="cursor-hint" aria-hidden="true">
+          <div class="cursor-hint-icon">🖱️</div>
+          <p class="cursor-hint-title">Déplacez votre souris ici</p>
+          <p class="cursor-hint-sub">
+            Vos mouvements sont visibles par tous les participants en temps réel
+          </p>
         </div>
 
-        <div class="hero-grid">
-          <aside class="panel glass panel--compact">
-            <div class="panel-title-row">
-              <h2>Votre identité</h2>
-              <button id="theme-toggle" class="ghost-button" type="button">🌙</button>
-            </div>
-
-            <label class="field">
-              <span>Pseudonyme</span>
-              <input id="username-input" type="text" placeholder="Nom d'utilisateur" maxlength="18" />
-            </label>
-
-            <label class="field">
-              <span>Couleur du curseur</span>
-              <input id="color-input" type="color" value="#7c3aed" />
-            </label>
-
-            <div class="button-row">
-              <button id="connect-btn" class="primary-button" type="button">Se connecter</button>
-              <button id="random-name-btn" class="ghost-button" type="button">Aléatoire</button>
-            </div>
-
-            <div class="status-line">
-              <span id="status-pill" class="status-pill">Pas connecté</span>
-              <span id="connection-text">En attente de Supabase</span>
-            </div>
-
-            <div class="reaction-chooser">
-              <span>Réactions</span>
-              <div class="emoji-grid">
-                <button type="button" data-emoji="👍">👍</button>
-                <button type="button" data-emoji="😂">😂</button>
-                <button type="button" data-emoji="❤️">❤️</button>
-                <button type="button" data-emoji="🎉">🎉</button>
-              </div>
-            </div>
-          </aside>
-
-          <section class="panel glass panel--large">
-            <div class="panel-title-row">
-              <h2>Surface collaborative</h2>
-              <span class="micro-copy">Mouvements + réactions + chat en direct</span>
-            </div>
-
-            <div class="surface-caption">
-              <p>
-                Déplacez votre souris sur la zone pour partager votre curseur en temps réel avec les autres sessions.
-              </p>
-            </div>
-
-            <div class="showcase-area" id="surface-area">
-              <div id="cursor-layer" aria-hidden="true"></div>
-            </div>
-          </section>
-        </div>
-      </section>
-
-      <section class="chat-card glass">
-        <div class="panel-title-row">
-          <h2>Chat temps réel</h2>
-          <span id="chat-indicator" class="micro-copy">En attente</span>
+        <!-- Curseur de l'utilisateur local (SVG custom) -->
+        <div id="my-cursor" class="my-cursor" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" id="my-cursor-svg"
+            width="20" height="26" viewBox="0 0 20 26" fill="none">
+            <path
+              id="my-cursor-path"
+              d="M4 2L4 20.5L8 17L13 17L9 10.5L13 10.5L4 2Z"
+              stroke="rgba(255,255,255,0.9)"
+              stroke-width="1.5"
+              stroke-linejoin="round"
+            />
+          </svg>
         </div>
 
-        <div id="chat-feed" class="chat-feed" aria-live="polite"></div>
+        <!-- Les curseurs distants sont injectés ici dynamiquement -->
+      </main>
 
-        <form id="chat-form" class="chat-form">
+      <!-- ── Panneau : utilisateurs en ligne ── -->
+      <aside
+        id="panel-users"
+        class="side-panel panel-users"
+        aria-label="Utilisateurs en ligne"
+      >
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            En ligne
+          </h2>
+        </div>
+        <ul
+          id="users-list"
+          class="users-list"
+          role="list"
+          aria-label="Liste des participants"
+          aria-live="polite"
+        >
+          <!-- Injecté dynamiquement -->
+        </ul>
+      </aside>
+
+      <!-- ── Panneau : chat ── -->
+      <aside
+        id="panel-chat"
+        class="side-panel panel-chat"
+        aria-label="Chat en temps réel"
+      >
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>
+            </svg>
+            Chat
+          </h2>
+        </div>
+
+        <!-- Liste des messages -->
+        <div
+          id="chat-messages"
+          class="chat-messages"
+          role="log"
+          aria-live="polite"
+          aria-label="Messages du chat"
+          aria-relevant="additions"
+        >
+          <!-- Injecté dynamiquement -->
+        </div>
+
+        <!-- Zone de saisie -->
+        <div class="chat-input-wrapper">
           <input
             id="chat-input"
+            class="chat-input"
             type="text"
-            maxlength="160"
-            placeholder="Écrivez un message…"
+            placeholder="Envoyer un message…"
+            maxlength="500"
             autocomplete="off"
+            aria-label="Écrire un message"
           />
-          <button class="primary-button" type="submit">Envoyer</button>
-        </form>
-      </section>
-    </main>
+          <button
+            id="chat-send"
+            class="chat-send-btn"
+            aria-label="Envoyer le message"
+            disabled
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+      </aside>
 
-    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </div><!-- /.app-body -->
 
-    <script type="module" src="app.js"></script>
-  </body>
+    <!-- ── Barre de réactions emoji ── -->
+    <div
+      class="emoji-bar"
+      role="toolbar"
+      aria-label="Réactions rapides"
+    >
+      <button class="emoji-btn" data-emoji="👏" title="Applaudissements">👏</button>
+      <button class="emoji-btn" data-emoji="🔥" title="Feu">🔥</button>
+      <button class="emoji-btn" data-emoji="💯" title="Parfait">💯</button>
+      <button class="emoji-btn" data-emoji="🚀" title="Fusée">🚀</button>
+      <button class="emoji-btn" data-emoji="❤️" title="Amour">❤️</button>
+      <button class="emoji-btn" data-emoji="😂" title="Rire">😂</button>
+      <button class="emoji-btn" data-emoji="⚡" title="Énergie">⚡</button>
+      <button class="emoji-btn" data-emoji="🎉" title="Célébration">🎉</button>
+      <button class="emoji-btn" data-emoji="👍" title="Bravo">👍</button>
+      <button class="emoji-btn" data-emoji="✨" title="Étincelles">✨</button>
+    </div>
+
+    <!-- Indicateur de statut de connexion -->
+    <div
+      id="connection-status"
+      class="connection-status"
+      role="status"
+      aria-live="polite"
+    ></div>
+
+  </div><!-- /#app -->
+
+
+  <!-- ════════════════════════════════════════
+       CONTENEURS GLOBAUX (hors du flux)
+       ════════════════════════════════════════ -->
+
+  <!-- Emojis flottants -->
+  <div id="floating-emojis" aria-hidden="true"></div>
+
+  <!-- Toasts / notifications -->
+  <div
+    id="toast-container"
+    class="toast-container"
+    role="region"
+    aria-label="Notifications"
+    aria-live="assertive"
+    aria-atomic="true"
+  ></div>
+
+
+  <!-- ════════════════════════════════════════
+       SCRIPTS (ES Modules)
+       ════════════════════════════════════════ -->
+  <script type="module" src="js/app.js"></script>
+</body>
 </html>
-

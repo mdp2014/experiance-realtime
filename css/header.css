@@ -1,0 +1,173 @@
+/* ══════════════════════════════════════════════════════════
+   HEADER — Barre de navigation principale
+   ══════════════════════════════════════════════════════════ */
+
+.app-header {
+  position: relative;
+  z-index: var(--z-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-h);
+  padding: 0 var(--space-4);
+  flex-shrink: 0;
+  background: rgba(7, 10, 28, 0.95);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ── Côté gauche ────────────────────────────────────────── */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* Logo */
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  user-select: none;
+}
+
+.header-logo-icon {
+  font-size: 18px;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
+}
+
+.header-logo-text {
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semi);
+  letter-spacing: -0.3px;
+}
+
+.header-logo-accent {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Badge "X en ligne" */
+.user-count-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  user-select: none;
+}
+
+/* Pastille verte animée */
+.count-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5);
+  animation: pulse-ring 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-ring {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
+  50%       { box-shadow: 0 0 0 4px rgba(52, 211, 153, 0); }
+}
+
+.count-value {
+  font-weight: var(--weight-semi);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  min-width: 14px;
+  text-align: center;
+}
+
+.count-label {
+  color: var(--text-dim);
+}
+
+/* ── Côté droit ─────────────────────────────────────────── */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* Boutons icônes */
+.header-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  transition: color var(--transition), background var(--transition);
+}
+
+.header-btn:hover {
+  background: var(--bg-surface-hover);
+  color: var(--text);
+}
+
+/* État actif (panneau ouvert) */
+.header-btn[aria-pressed="true"] {
+  background: var(--accent-dim);
+  color: var(--accent-light);
+}
+
+/* Danger (quitter) */
+.header-btn--danger {
+  color: var(--text-muted);
+}
+
+.header-btn--danger:hover {
+  background: rgba(248, 113, 113, 0.12);
+  color: var(--danger);
+}
+
+/* Badge non-lus sur le bouton chat */
+.chat-unread-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: var(--danger);
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  color: white;
+  line-height: 16px;
+  text-align: center;
+}
+
+/* Avatar de l'utilisateur connecté */
+.my-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color, var(--accent));
+  border: 2px solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: white;
+  user-select: none;
+  cursor: default;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.3), 0 0 12px rgba(var(--color-rgb, 99, 102, 241), 0.3);
+  margin: 0 var(--space-1);
+}
